@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>材料リスト制作サイト</title>
+<link rel="icon" type="image/png" href="icon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<meta name="apple-mobile-web-app-title" content="材料リスト">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#3f7530">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -1355,6 +1361,7 @@
       importStatus.textContent = msg;
     }
   }
+
 
   document.getElementById('sortDescBtn').addEventListener('click', function(){
     selectedOrder.sort((a, b) => (quantities[b] || 0) - (quantities[a] || 0));
