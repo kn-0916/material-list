@@ -681,7 +681,7 @@
         <h2>選択リスト</h2>
         <div class="sub"><span id="sidebarCount">0</span> 件選択中</div>
         <input type="file" id="importFileInput" accept=".txt" style="display:none;">
-        <button class="btn ghost small full" id="importBtn" style="width:100%; margin-bottom:8px;">材料リスト(.txt)を読み込む</button>
+        <button class="btn ghost small full" id="importBtn" style="width:100%; margin-bottom:8px;">材料リスト(.txt)を読み込む(litematicaのみ対応)</button>
         <div id="importStatus" style="display:none; font-size:11px; color:var(--text-dim); margin:-4px 0 8px;"></div>
         <div style="display:flex; gap:6px; margin-bottom:8px;">
           <input type="text" id="historyLabelInput" class="filename-input" placeholder="履歴のラベル（省略可）" autocomplete="off" style="flex:1; margin-bottom:0;">
@@ -691,8 +691,8 @@
         <div class="sidebar-list" id="sidebarList"></div>
         <div class="sidebar-actions">
           <div style="display:flex; gap:8px;">
-            <button class="btn ghost small" id="sortDescBtn" style="flex:1;">個数が多い順</button>
-            <button class="btn ghost small" id="sortAscBtn" style="flex:1;">個数が少ない順</button>
+            <button class="btn ghost small" id="sortDescBtn" style="flex:1;">多い順</button>
+            <button class="btn ghost small" id="sortAscBtn" style="flex:1;">少ない順</button>
           </div>
           <button class="btn secondary full" id="copyAllBtn">まとめてコピー</button>
           <input type="text" id="filenameInput" class="filename-input" placeholder="ファイル名（未入力: 材料リスト1）" autocomplete="off">
@@ -703,7 +703,7 @@
           <div id="extraFilenameContainer" style="display:none; flex-direction:column; gap:6px;"></div>
           <label class="toggle-wrap" style="font-size:11.5px;">
             <input type="checkbox" id="zipToggle">
-            まとめてZIPでダウンロード（複数枚になる場合）
+            まとめてZIPでダウンロード
           </label>
           <input type="text" id="zipFilenameInput" class="filename-input" placeholder="ZIPファイル名（未入力: 材料リストまとめ）" autocomplete="off" style="display:none;">
           <button class="btn full" id="downloadBtn">画像で保存</button>
