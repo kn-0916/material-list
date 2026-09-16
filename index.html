@@ -48,7 +48,6 @@
   }
   a{color:inherit;}
 
-  /* ---------- Header ---------- */
   header{
     position:relative;
     overflow:hidden;
@@ -106,7 +105,6 @@
     100%{ transform:translateY(var(--fall-distance, 220px)) rotate(300deg); opacity:0; }
   }
 
-  /* ---------- Sticky control bar ---------- */
   .controlbar{
     position:sticky;
     top:0;
@@ -234,7 +232,6 @@
   }
   .toggle-wrap input{width:16px;height:16px;accent-color:var(--grass);}
 
-  /* ---------- Layout ---------- */
   main{max-width:1320px; margin:0 auto; padding:22px 16px 80px;}
   .layout{
     display:flex;
@@ -247,7 +244,6 @@
     flex-shrink:0;
   }
 
-  /* ---------- Catalog table ---------- */
   .table-shell{
     background:var(--panel);
     border:3px solid var(--slot-border-dark);
@@ -338,7 +334,6 @@
 
   .empty-row td{padding:40px; text-align:center; color:var(--text-dim); font-size:14px;}
 
-  /* ---------- Sidebar (selection list) ---------- */
   .sidebar{
     background:var(--panel);
     border:3px solid var(--slot-border-dark);
@@ -737,8 +732,8 @@
   const DATA = JSON.parse(document.getElementById('itemData').textContent);
   const SHULKER_SLOTS = 27;
 
-  const quantities = Object.create(null); // id -> number
-  const selectedOrder = []; // ids in the order they were added, for the sidebar list
+  const quantities = Object.create(null);
+  const selectedOrder = [];
 
   const byId = Object.create(null);
   for (const it of DATA) byId[it.id] = it;
@@ -779,7 +774,6 @@
   }
 
   function labelTextShort(item, qty){
-    // same breakdown as labelText but without the item name prefix, for compact sidebar display
     const parts = labelParts(item, qty);
     return parts.join('+');
   }
@@ -788,7 +782,6 @@
     return str.replace(/[\u30a1-\u30f6]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60));
   }
 
-  // ---- lightweight romaji -> hiragana converter (Hepburn-ish, with common variants) ----
   const ROMAJI_MAP = {
     a:'あ', i:'い', u:'う', e:'え', o:'お',
     ka:'か', ki:'き', ku:'く', ke:'け', ko:'こ',
@@ -824,7 +817,6 @@
     let i = 0;
     while(i < s.length){
       const c = s[i];
-      // doubled consonant -> small tsu (e.g. "kk" -> っk...)
       if(c !== 'n' && /[a-z]/.test(c) && s[i+1] === c && !'aeiou'.includes(c)){
         out += 'っ';
         i += 1;
@@ -848,7 +840,7 @@
         out += 'ー';
         i += 1;
       } else {
-        out += c; // pass through anything unrecognized (already-hiragana, kanji, symbols)
+        out += c;
         i += 1;
       }
     }
@@ -883,7 +875,7 @@
     return searchInput.value.trim().toLowerCase();
   }
 
-  let exactMatchId = null; // when set, table shows only this single item
+  let exactMatchId = null;
 
   function getFilteredList(){
     let list;
@@ -967,9 +959,6 @@
     saveUserState();
   }
 
-  // ---- shared quantity update, used by both the main table and the sidebar ----
-  // core bookkeeping only: updates quantities + selectedOrder, no rendering.
-  // Returns the clamped integer value that was set.
   function setQuantityRaw(id, newQty){
     let v = parseInt(newQty, 10);
     if(isNaN(v) || v < 0) v = 0;
@@ -988,7 +977,6 @@
   function updateQuantity(id, newQty){
     const v = setQuantityRaw(id, newQty);
 
-    // patch the main table row directly if it's currently rendered (fast path)
     const row = tableBody.querySelector('tr[data-id="' + CSS.escape(id) + '"]');
     if(row){
       const item = byId[id];
@@ -1001,13 +989,11 @@
       cells[4].textContent = st; cells[4].className = st>0 ? 'val-st' : 'val-zero';
       cells[5].textContent = ea; cells[5].className = v>0 ? 'val-ea' : 'val-zero';
     }
-    // if onlyFilled filter is on, item visibility may need to change -> full refresh
     if(onlyFilledToggle.checked) render();
 
     renderSidebar();
   }
 
-  // ---- main table quantity input (event delegation) ----
   tableBody.addEventListener('input', function(e){
     const t = e.target;
     if(t.classList.contains('qty-input')){
@@ -1015,14 +1001,12 @@
     }
   });
 
-  // ---- sidebar remove buttons ----
   sidebarList.addEventListener('click', function(e){
     const btn = e.target.closest('.sr-remove');
     if(!btn) return;
     updateQuantity(btn.getAttribute('data-remove'), 0);
   });
 
-  // ---- sidebar drag-and-drop reordering (native HTML5 DnD; small list, unaffected) ----
   let dragSourceId = null;
   const sidebarPanel = document.getElementById('sidebarPanel');
 
@@ -1086,7 +1070,6 @@
     renderSidebar();
   });
 
-  // ---- catalog -> sidebar: double-click an item's image to add it ----
   tableBody.addEventListener('dblclick', function(e){
     const slot = e.target.closest('.slot');
     if(!slot) return;
@@ -1120,7 +1103,6 @@
     });
   }
 
-  // ---- search + autocomplete ----
   let activeSuggestIndex = -1;
 
   function renderSuggestions(){
@@ -1177,7 +1159,7 @@
 
   let searchDebounceTimer = null;
   searchInput.addEventListener('input', function(){
-    exactMatchId = null; // typing again releases the exact-match lock
+    exactMatchId = null;
     updateSearchClearBtn();
     clearTimeout(searchDebounceTimer);
     searchDebounceTimer = setTimeout(function(){
@@ -1229,7 +1211,6 @@
 
   onlyFilledToggle.addEventListener('change', render);
 
-  // ---- top controls ----
   const clearAllBtn = document.getElementById('clearAllBtn');
   let clearArmed = false;
   let clearArmTimer = null;
@@ -1256,12 +1237,10 @@
     renderSidebar();
   });
 
-  // ---- import a Litematica material-list .txt export ----
   const importFileInput = document.getElementById('importFileInput');
   const importBtn = document.getElementById('importBtn');
   const importStatus = document.getElementById('importStatus');
 
-  // matches ascii-table rows like: | クォーツのハーフブロック    |   399 |     399 |         0 |
   const MATERIAL_ROW_RE = /^\|\s*(.+?)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*$/;
 
   const jaIndex = Object.create(null);
@@ -1275,7 +1254,7 @@
     const file = this.files && this.files[0];
     if(!file) return;
     readAndImportFile(file);
-    importFileInput.value = ''; // allow re-importing the same file again later
+    importFileInput.value = '';
   });
 
   function readAndImportFile(file){
@@ -1286,7 +1265,6 @@
     reader.readAsText(file, 'utf-8');
   }
 
-  // ---- allow dropping the .txt file anywhere on the page ----
   const pageDropOverlay = document.getElementById('pageDropOverlay');
   let dragEnterCount = 0;
 
@@ -1303,7 +1281,7 @@
 
   window.addEventListener('dragover', function(e){
     if(!dragHasFiles(e)) return;
-    e.preventDefault(); // required to allow dropping
+    e.preventDefault();
   });
 
   window.addEventListener('dragleave', function(e){
@@ -1405,7 +1383,7 @@
   }
 
   function drawSelectionCanvas(ids, layout){
-    const scale = 2; // render at 2x for a crisp download
+    const scale = 2;
     const rowH = 52;
     const padX = 18;
     const padTop = 14;
@@ -1422,7 +1400,6 @@
     const ctx = canvas.getContext('2d');
     ctx.scale(scale, scale);
 
-    // background + outer border
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#9a9f89';
@@ -1434,7 +1411,6 @@
       const item = byId[id];
       const qty = quantities[id] || 0;
 
-      // row separator
       ctx.strokeStyle = '#e6e9da';
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -1445,7 +1421,6 @@
       const cy = y + rowH / 2;
       ctx.textBaseline = 'middle';
 
-      // icon slot
       const slotX = padX, slotY = y + (rowH - imgBox) / 2;
       ctx.fillStyle = '#8b8b8b';
       ctx.fillRect(slotX, slotY, imgBox, imgBox);
@@ -1458,14 +1433,12 @@
         ctx.drawImage(imgEl, slotX + pad, slotY + pad, imgBox - pad * 2, imgBox - pad * 2);
       }
 
-      // item name (full, never truncated)
       const nameX = padX + imgBox + gapAfterImg;
       ctx.fillStyle = '#262b1f';
       ctx.font = NAME_FONT;
       ctx.textAlign = 'left';
       ctx.fillText(item.ja, nameX, cy);
 
-      // quantity / label, right-aligned
       ctx.fillStyle = '#3f7530';
       ctx.font = LABEL_FONT;
       ctx.textAlign = 'right';
@@ -1506,8 +1479,6 @@
     return Math.max(1, Math.ceil(selectedOrder.length / ROWS_PER_IMAGE));
   }
 
-  // Show one filename field per image from the 2nd onward, growing automatically
-  // as the selection crosses each multiple of 10, while preserving already-typed values.
   function updateExtraFilenameInputs(){
     if(!extraFilenameToggle.checked || currentChunkCount() <= 1){
       extraFilenameContainer.innerHTML = '';
@@ -1550,7 +1521,7 @@
   }
 
   async function downloadSelectionImages(){
-    const layout = measureLayout(selectedOrder); // shared column widths across every image
+    const layout = measureLayout(selectedOrder);
     const chunks = [];
     for(let i = 0; i < selectedOrder.length; i += ROWS_PER_IMAGE){
       chunks.push(selectedOrder.slice(i, i + ROWS_PER_IMAGE));
@@ -1614,20 +1585,19 @@
     }
   });
 
-  // ---- decorative falling items in the header background ----
   function initFallingItems(){
     const container = document.getElementById('fallingItems');
     if(!container) return;
     const headerEl = container.closest('header');
-    const fallDistance = (headerEl ? headerEl.offsetHeight : 180) + 80; // px, clears the whole header
+    const fallDistance = (headerEl ? headerEl.offsetHeight : 180) + 80;
     const COUNT = 22;
     let html = '';
     for(let i = 0; i < COUNT; i++){
       const item = DATA[Math.floor(Math.random() * DATA.length)];
-      const size = 18 + Math.random() * 22; // 18px - 40px
-      const left = Math.random() * 100; // %
-      const duration = 7 + Math.random() * 10; // 7s - 17s
-      const delay = -Math.random() * duration; // negative so they're already mid-fall on load
+      const size = 18 + Math.random() * 22;
+      const left = Math.random() * 100;
+      const duration = 7 + Math.random() * 10;
+      const delay = -Math.random() * duration;
       html += '<img class="falling-item" src="' + item.img + '" alt="" ' +
         'style="left:' + left.toFixed(1) + '%; width:' + size.toFixed(0) + 'px; height:' + size.toFixed(0) + 'px; ' +
         '--fall-distance:' + fallDistance + 'px; ' +
@@ -1636,7 +1606,6 @@
     container.innerHTML = html;
   }
 
-  // ---- simple local name+password "login" (localStorage only; this device/browser only) ----
   const LS_DATA_PREFIX = 'mcMatList_data_v1_';
   let currentUserName = null;
 
@@ -1660,7 +1629,6 @@
     } catch(e){}
   }
 
-  // ---- named history snapshots (multiple saved lists per user, browsable later) ----
   const LS_HISTORY_PREFIX = 'mcMatList_history_v1_';
 
   function loadHistory(){
