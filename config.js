@@ -4,6 +4,6 @@
 //   key : anon public(publishable)キー  ← 公開してよいキー
 // ※ service_role キーは絶対にここへ書かないでください(公開されると全データが見られてしまいます)。
 window.MANABI = {
-  url: "https://ここにProjectURL.supabase.co",
-  key: "ここにanon(publishable)キー"
+  url: "https://lrnsdnydfqdchgnubfgo.supabase.co/rest/v1/",
+  key: "sb_publishable_2Y_Km6gU_w3P4LCR-v-cTg_D2ocTsuO"
 };
